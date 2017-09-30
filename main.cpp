@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <iomanip>
 
+#include "conv.h"
 using namespace std;
 
 const uint NAME_WIDTH_MAX = 10;
