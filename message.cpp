@@ -5,14 +5,17 @@
 #include "message.h"
 
 
-message::message() : date(0), sender(""), corpus({""}){
+message::message() : date(tm()), sender(""), corpus({""}){
 
 }
-message::message(time_t d, string sender, vector<string> corpus) : date(d), sender(sender), corpus(corpus){
+message::message(tm d, string sender, vector<string> corpus) : date(d), sender(sender), corpus(corpus){
 
 }
+message::message(tm d, string sender, string corpusLine) : date(d), sender(sender){
+    corpus.push_back(corpusLine);
+}
 
-time_t message::getDate(){
+tm message::getDate(){
     return date;
 }
 
@@ -31,4 +34,7 @@ string message::getText(){
         corp.append(" ");
     }
     return corp;
+}
+void message::addCorpusLine(string corpusLine){
+    corpus.push_back(corpusLine);
 }

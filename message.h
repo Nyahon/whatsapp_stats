@@ -1,9 +1,7 @@
 //
 // Created by nyahon on 30.09.17.
 //
-
-#ifndef PROJECTS_MESSAGE_H
-#define PROJECTS_MESSAGE_H
+#pragma once
 
 #include <ctime>
 #include <string>
@@ -14,17 +12,19 @@ using namespace std;
 class message {
 public:
     message();
-    message(time_t date, string sender, vector<string> corpus);
-    time_t getDate();
+    message(tm date, string sender, vector<string> corpus);
+    message(tm date, string sender, string corpus);
+
+    tm getDate();
     string getSender();
     vector<string> getCorpus();
     string getText();
+    void addCorpusLine(string corpusLine);
 private:
-    const time_t date;
+    const tm date;
     const string sender;
-    const vector<string> corpus;
+    vector<string> corpus;
 
 };
 
 
-#endif //PROJECTS_MESSAGE_H

@@ -8,13 +8,15 @@
 
 #include <ctime>
 using namespace std;
+class WhatsappConv {
 
-getFullMessages(){
+    getFullMessages() {
+
+    }
+
+    time_t wsGetTime() {
+
+    }
 
 }
-
-time_t wsGetTime(){
-
-}
-
 #endif //PROJECTS_WHATSAPPEXTRACTFROMDUMP_H

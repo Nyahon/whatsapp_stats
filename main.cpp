@@ -1,4 +1,5 @@
 // reading a text file
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -10,6 +11,8 @@ using namespace std;
 
 const uint NAME_WIDTH_MAX = 10;
 int main () {
+    conv c("../anna.txt");
+    /*
     string line;
     ifstream myfile ("../anna.txt");
     string user1 = "Yohann";
@@ -41,6 +44,6 @@ int main () {
     }
 
     else cout << "Unable to open file";
-
+*/
     return 0;
 }

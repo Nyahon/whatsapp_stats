@@ -5,6 +5,7 @@
 #ifndef PROJECTS_CONV_H
 #define PROJECTS_CONV_H
 
+#include <map>
 #include "message.h"
 
 using namespace std;
@@ -17,8 +18,9 @@ public:
 
 private:
     vector<vector<message> > messages;
-    vector<string> namesPersons;
-
+    map<string,int> namesPersons;
+    time_t start;
+    time_t end;
 };
 
 
