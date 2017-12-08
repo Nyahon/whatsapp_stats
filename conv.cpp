@@ -6,12 +6,15 @@
 #include <iostream>
 #include <algorithm>
 #include "conv.h"
+#include <ctime>
 
 
 using namespace std;
 
 #define SEP_HEADER ':'
 #define SEP_TIME '-'
+
+
 conv::conv() : messages(), namesPersons(){
 
 }
@@ -29,6 +32,7 @@ conv::conv(string pathToFile){
     string date = "";
     string timeHM = "";
     int cntPersons = 0;
+    int id = 0;
 
     if (myfile.is_open())
     {
@@ -38,7 +42,6 @@ conv::conv(string pathToFile){
             if(line.find(",") == 8 && line.find(" - ") == 15){
 
                 splitAtFirst(line, SEP_TIME, time, body);
-              //  cout << time << "****" << SEP_TIME << body << endl;
 
                 //=================TIME====================
                 splitAtFirst(time, ',', date, timeHM);
@@ -46,23 +49,19 @@ conv::conv(string pathToFile){
 
                 vector<int> ret;
                 split(date,'.',ret);
-                //for (auto r : ret)
-                //    cout << r << ":::";
+
                 t.tm_mday   = ret[0];
                 t.tm_mon    = ret[1];
                 t.tm_year   = 100 + ret[2]; //HACKY AS FUCK TODO BETTER
 
-                //cout <<"TK: " << t.tm_mday << endl;
                 ret.clear();
 
                 timeHM.erase(timeHM.begin());
-                //cout << timeHM << endl;
 
                 split(timeHM, ':', ret);
                 t.tm_hour = ret[0];
                 t.tm_min = ret[1];
-                cout << t.tm_mday << ":" << t.tm_mon << ":" << 1900+t.tm_year << "," << t.tm_hour
-                     << ":" << t.tm_min << endl;
+                cout << dateToString(&t) << endl;
                 ret.clear();
 
                 //=================BODY====================
@@ -75,39 +74,37 @@ conv::conv(string pathToFile){
                     //add people to the list if not yet in.
                     if(namesPersons.count(name) == 0){
                         namesPersons[name] = cntPersons++;
-                        cout << "*" << name << "*" << namesPersons[name]<< endl;
+                        msgPersons.resize(msgPersons.size() + 1);
                     }
-                    message mess = message(t, name, text);
-                    messages.resize(4);
-                    messages.at(namesPersons[name]).push_back(mess);
 
-                    for(int i = 0;i<messages.at(0).size();i++){
-                        cout << messages.at(0).at(i).getSender()<< ":" << messages.at(1).at(i).getSender() << endl;
-                    }
+                    messages.push_back( message(t, name, text, id) );
+                    msgPersons.at(namesPersons[name]).push_back(id);
+
                 }
 
             }else{
 
             }
-            //split(line, SEP_HEADER, lineSplit);
+            id++;
         }
+        nbMessages = messages.size();
+        start = messages[0].getDate();
+        end = messages[messages.size()-1].getDate();
+        cout << dateToString(&start) << "--" << dateToString(&end) << endl;
+        cout << duration(&start, &end) << endl;
+      //  tm inte = interval(start, end);
+      //  cout << dateToString( localtime( mktime( end ) - mktime( start) ) );
+    }
 
-    }/*
-        while ( getline (myfile,line) )
-        {
-            //cout << line << '\n';
-            if (line.find(user1) != string::npos) {
-                numMessUser1++;
-            }
-            if (line.find(user2) != string::npos) {
-                numMessUser2++;
-            }
-
-        }
-        myfile.close();
-*/
 }
 
 uint conv::getNbrPerson(){
-
+    return namesPersons.size();
+}
+string conv::toString(){
+    stringstream conv;
+    for(int i = 0;i<nbMessages;++i){
+        conv << messages[i].toString() << endl;
+    }
+    return conv.str();
 }

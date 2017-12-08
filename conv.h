@@ -10,17 +10,29 @@
 
 using namespace std;
 
+struct idMesInConv{
+    int idName;
+    int idMsg;
+};
+
 class conv {
 public:
     conv();
     conv(string pathToFile);
     uint getNbrPerson();
+    vector<message> getConv();
+    vector<message> getMsg(string name);
+    string toString();
+
+
 
 private:
-    vector<vector<message> > messages;
+    vector<message> messages;
     map<string,int> namesPersons;
-    time_t start;
-    time_t end;
+    vector< vector <int> > msgPersons;
+    int nbMessages;
+    tm start;
+    tm end;
 };
 
 

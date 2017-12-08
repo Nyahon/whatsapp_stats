@@ -12,6 +12,7 @@ using namespace std;
 const uint NAME_WIDTH_MAX = 10;
 int main () {
     conv c("../anna.txt");
+   // cout << c.toString() << endl;
     /*
     string line;
     ifstream myfile ("../anna.txt");

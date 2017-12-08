@@ -12,15 +12,18 @@ using namespace std;
 class message {
 public:
     message();
-    message(tm date, string sender, vector<string> corpus);
-    message(tm date, string sender, string corpus);
+    message(tm date, string sender, vector<string> corpus, int id);
+    message(tm date, string sender, string corpus, int id);
 
+    int getId();
     tm getDate();
     string getSender();
     vector<string> getCorpus();
     string getText();
     void addCorpusLine(string corpusLine);
+    string toString();
 private:
+    const int id;
     const tm date;
     const string sender;
     vector<string> corpus;
