@@ -20,8 +20,8 @@ public:
     conv();
     conv(string pathToFile);
     uint getNbrPerson();
-    vector<message> getConv();
-    vector<message> getMsg(string name);
+    const vector<message> getConv();
+    const vector<message> getMsg(string name);
     string toString();
 
 

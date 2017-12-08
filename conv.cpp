@@ -101,6 +101,18 @@ conv::conv(string pathToFile){
 uint conv::getNbrPerson(){
     return namesPersons.size();
 }
+
+const vector<message> conv::getConv(){
+    return messages;
+}
+const vector<message> conv::getMsg(string name){
+    vector<message> listMsg;
+
+    for(int i = 0;i<msgPersons[ namesPersons[name] ].size();++i){
+        listMsg.push_back( messages[i] );
+    }
+}
+
 string conv::toString(){
     stringstream conv;
     for(int i = 0;i<nbMessages;++i){

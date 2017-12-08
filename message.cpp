@@ -47,6 +47,7 @@ void message::addCorpusLine(string corpusLine){
     corpus.push_back(corpusLine);
 }
 
+
 string message::toString() {
     stringstream mes;
 
