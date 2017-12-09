@@ -15,7 +15,6 @@
 //Pre-constructed vector.
 
 
-
 template<typename Out >
 static void split(const std::string &s, char delim, std::vector<Out> &result) {
     std::stringstream ss;
@@ -60,10 +59,14 @@ static tm interval(tm start, tm end){
         return x;
 }
 static std::string dateToString(const tm *date){
+    int compensa = 0;
+    if( (date->tm_year > 0 ? (int) log10 ((double) date->tm_year) + 1 : 1) < 4)
+        compensa = 1900;
+
     std::stringstream t;
     t  << std::setw(2) << std::setfill('0') << date->tm_mday << "."
        << std::setw(2) << std::setfill('0') << date->tm_mon + 1 << "."
-       << std::setw(4) << std::setfill(' ') << date->tm_year+1900
+       << std::setw(4) << std::setfill(' ') << date->tm_year+compensa
          << "-"
        << std::setw(2) << std::setfill('0') << date->tm_hour << ":"
        << std::setw(2) << std::setfill('0') << date->tm_min;
@@ -88,12 +91,26 @@ static std::string duration(tm *start, tm *end){
     return dur.str();
 }
 
-static void sepCharWA(std::string line, char &time, char &){
+/*
+ * Search
+ */
+static void sepCharWA(std::string line, int &dateLength, int &timeLength, char &date, char &dateToHm, char &hm, char &timeBody, char &senderCorpus){
 
-    line.find_first_not_of("0123456789");
-    for(char c : line){
-        if(!isdigit(c));
-    }
+    const std::string digits = "0123456789";
+    const std::string empty =  " ";
+    date = line[ line.find_first_not_of(digits+empty) ];
+
+    dateLength = (int)line.find_first_not_of(digits+date+empty);
+    dateToHm = line[dateLength];
+
+    int hmPos = line.find_first_not_of(digits+empty, dateLength+1);
+    hm = line[ hmPos ];
+    timeLength = line.find_first_not_of(digits+empty, hmPos+1 );
+
+    //hack, i'm bored by this. TODO correctly
+    timeBody = '-';
+    senderCorpus = ':';
+
 }
 //return new vector
 /*

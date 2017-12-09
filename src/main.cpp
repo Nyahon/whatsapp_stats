@@ -13,10 +13,10 @@ int dateNameCSV(convData c, string filename);
 
 const uint NAME_WIDTH_MAX = 10;
 int main () {
-    convData c("../conversations/anna.txt");
+    convData c("../conversations/lucien.txt");
     cout << "#msg in conversation: " << c.getNbMsg() << endl;
 
-    string filename = "anna_yohann";
+    string filename = "lucien_yohann";
     dateNameCSV(c, filename);
 
 
@@ -43,7 +43,7 @@ int dateNameCSV(convData c, string filename){
                 date = dateToString(&dateTM);
 
                 sender = messages.at(msgIndexPerson[i]).getSender(); //TODO put in previous loop for improvement
-
+                cout << mktime(&dateTM) << endl;
                 fi << mktime(&dateTM) << "," << sender << endl;
             }
         }

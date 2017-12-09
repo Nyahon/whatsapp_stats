@@ -11,8 +11,6 @@
 
 using namespace std;
 
-#define SEP_HEADER ':'
-#define SEP_TIME '-'
 
 
 conv::conv() : messages(), namesPersons(){
@@ -21,7 +19,8 @@ conv::conv() : messages(), namesPersons(){
 
 conv::conv(string pathToFile){
 
-    char SEP_IN_TIME;
+    char SEP_DATE, SEP_DATE_HM, SEP_HM, SEP_TIME_BODY, SEP_SENDER_CORPUS;
+    int dateLength, timeLength;
     ifstream myfile(pathToFile);
     string line;
 
@@ -38,47 +37,56 @@ conv::conv(string pathToFile){
 
     if (myfile.is_open())
     {
+        getline(myfile, line);
+        sepCharWA(line, dateLength, timeLength, SEP_DATE, SEP_DATE_HM, SEP_HM, SEP_TIME_BODY, SEP_SENDER_CORPUS );
+        myfile.seekg (0, ios::beg);
+        cout << SEP_DATE << " " << SEP_DATE_HM << " " << SEP_HM << " " << SEP_TIME_BODY << " " << SEP_SENDER_CORPUS << " " << dateLength << " " << timeLength << endl;
+
+
         while ( getline (myfile,line) ){
             //strong selection based on the current format of Whatsapp Dump - 13.10.17
             //if found, we are at the first line of a message.
-            SEP_IN_TIME = line[2];
 
-            if(line.find(",") == 8 && line.find(" - ") == 15){
+            if(line.find(SEP_DATE_HM) == dateLength && line.find(SEP_TIME_BODY) == timeLength ){
 
-                splitAtFirst(line, SEP_TIME, time, body);
+                int compensate = -190;
+                if(dateLength == 8){
+                    compensate = 100;
+                }
+                splitAtFirst(line, SEP_TIME_BODY, time, body);
 
                 //=================TIME====================
-                splitAtFirst(time, ',', date, timeHM);
+                splitAtFirst(time, SEP_DATE_HM, date, timeHM);
                 tm t = {0};
 
                 vector<int> ret;
-                split(date, SEP_IN_TIME ,ret);
+                split(date, SEP_DATE ,ret);
 
                 t.tm_mday   = ret[0];
                 t.tm_mon    = ret[1] - 1;
-                t.tm_year   = 100 + ret[2]; //HACKY AS FUCK, only work for Year>2000 TODO BETTER
+                t.tm_year   = compensate + ret[2]; //HACKY AS FUCK, only work for Year>2000 TODO BETTER
 
                 ret.clear();
 
                 timeHM.erase(timeHM.begin());
 
-                split(timeHM, ':', ret);
+                split(timeHM, SEP_HM, ret);
                 t.tm_hour = ret[0];
                 t.tm_min = ret[1];
                 ret.clear();
 
                 t.tm_isdst = -1;
                 //=================BODY====================
-                if(body.find(SEP_HEADER) != string::npos){
+                if(body.find(SEP_SENDER_CORPUS) != string::npos){
 
                 }
-                splitAtFirst(body, SEP_HEADER, name, text);
+                splitAtFirst(body, SEP_SENDER_CORPUS, name, text);
 
                 if(!name.empty()) {
                     //remove front space
                     name.erase(name.begin());
 
-                    //add people to the list if not yet in.
+         //add people to the list if not yet in.
                     if(namesPersons.count(name) == 0){
                         namesPersons[name] = cntPersons++;
                         msgPersons.resize(msgPersons.size() + 1);
