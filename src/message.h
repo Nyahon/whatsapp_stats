@@ -16,7 +16,7 @@ public:
     message(tm date, string sender, string corpus, int id);
 
     int getId();
-    tm getDate();
+    const tm getDate();
     string getSender();
     vector<string> getCorpus();
     string getText();

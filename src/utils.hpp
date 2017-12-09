@@ -55,14 +55,14 @@ static tm interval(tm start, tm end){
     tm x;
         x.tm_year = end.tm_year-start.tm_year;
         x.tm_mon  = end.tm_mon-start.tm_mon;
-        x.tm_yday = end.tm_yday-start.tm_yday;
+        x.tm_mday = end.tm_mday-start.tm_mday;
       //  mktime(&x);
         return x;
 }
 static std::string dateToString(const tm *date){
     std::stringstream t;
     t  << std::setw(2) << std::setfill('0') << date->tm_mday << "."
-       << std::setw(2) << std::setfill('0') << date->tm_mon << "."
+       << std::setw(2) << std::setfill('0') << date->tm_mon + 1 << "."
        << std::setw(4) << std::setfill(' ') << date->tm_year+1900
          << "-"
        << std::setw(2) << std::setfill('0') << date->tm_hour << ":"
@@ -86,6 +86,14 @@ static std::string duration(tm *start, tm *end){
     dur << days << "j " <<  hours << "d " << minutes << "m "<< seconds << "s " << "''";
 
     return dur.str();
+}
+
+static void sepCharWA(std::string line, char &time, char &){
+
+    line.find_first_not_of("0123456789");
+    for(char c : line){
+        if(!isdigit(c));
+    }
 }
 //return new vector
 /*

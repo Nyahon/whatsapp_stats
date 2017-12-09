@@ -23,7 +23,7 @@ message::message(tm d, string sender, string corpusLine, int id) : date(d), send
 int message::getId(){
     return id;
 }
-tm message::getDate(){
+const tm message::getDate(){
     return date;
 }
 

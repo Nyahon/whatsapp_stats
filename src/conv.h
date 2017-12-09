@@ -10,21 +10,17 @@
 
 using namespace std;
 
-struct idMesInConv{
-    int idName;
-    int idMsg;
-};
-
 class conv {
 public:
     conv();
     conv(string pathToFile);
     uint getNbrPerson();
+    vector<string> getnamesPersons(vector<string> *names);
     const vector<message> getConv();
     const vector<message> getMsg(string name);
+    const int getNbMsg();
+    const vector< vector<int> > getmsgIndexPersons();
     string toString();
-
-
 
 private:
     vector<message> messages;

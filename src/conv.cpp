@@ -20,6 +20,8 @@ conv::conv() : messages(), namesPersons(){
 }
 
 conv::conv(string pathToFile){
+
+    char SEP_IN_TIME;
     ifstream myfile(pathToFile);
     string line;
 
@@ -39,6 +41,8 @@ conv::conv(string pathToFile){
         while ( getline (myfile,line) ){
             //strong selection based on the current format of Whatsapp Dump - 13.10.17
             //if found, we are at the first line of a message.
+            SEP_IN_TIME = line[2];
+
             if(line.find(",") == 8 && line.find(" - ") == 15){
 
                 splitAtFirst(line, SEP_TIME, time, body);
@@ -48,11 +52,11 @@ conv::conv(string pathToFile){
                 tm t = {0};
 
                 vector<int> ret;
-                split(date,'.',ret);
+                split(date, SEP_IN_TIME ,ret);
 
                 t.tm_mday   = ret[0];
-                t.tm_mon    = ret[1];
-                t.tm_year   = 100 + ret[2]; //HACKY AS FUCK TODO BETTER
+                t.tm_mon    = ret[1] - 1;
+                t.tm_year   = 100 + ret[2]; //HACKY AS FUCK, only work for Year>2000 TODO BETTER
 
                 ret.clear();
 
@@ -61,10 +65,13 @@ conv::conv(string pathToFile){
                 split(timeHM, ':', ret);
                 t.tm_hour = ret[0];
                 t.tm_min = ret[1];
-                cout << dateToString(&t) << endl;
                 ret.clear();
 
+                t.tm_isdst = -1;
                 //=================BODY====================
+                if(body.find(SEP_HEADER) != string::npos){
+
+                }
                 splitAtFirst(body, SEP_HEADER, name, text);
 
                 if(!name.empty()) {
@@ -77,23 +84,25 @@ conv::conv(string pathToFile){
                         msgPersons.resize(msgPersons.size() + 1);
                     }
 
+                    if(name == "Annaline" || name == "Yohann"){
+
+                    }else{
+                        cout << "ERR " << name << " : " << id << endl;
+                    }
                     messages.push_back( message(t, name, text, id) );
                     msgPersons.at(namesPersons[name]).push_back(id);
+                    id++;
 
                 }
 
             }else{
-
+                messages[id-1].addCorpusLine(line);
             }
-            id++;
         }
         nbMessages = messages.size();
-        start = messages[0].getDate();
+        start =  messages[0].getDate();
         end = messages[messages.size()-1].getDate();
-        cout << dateToString(&start) << "--" << dateToString(&end) << endl;
-        cout << duration(&start, &end) << endl;
-      //  tm inte = interval(start, end);
-      //  cout << dateToString( localtime( mktime( end ) - mktime( start) ) );
+
     }
 
 }
@@ -102,9 +111,16 @@ uint conv::getNbrPerson(){
     return namesPersons.size();
 }
 
+vector<string> conv::getnamesPersons(vector<string> *names) {
+    for(map<string,int>::iterator it = namesPersons.begin(); it != namesPersons.end(); ++it) {
+        names->push_back(it->first);
+    }
+}
+
 const vector<message> conv::getConv(){
     return messages;
 }
+
 const vector<message> conv::getMsg(string name){
     vector<message> listMsg;
 
@@ -113,6 +129,13 @@ const vector<message> conv::getMsg(string name){
     }
 }
 
+const vector< vector<int> > conv::getmsgIndexPersons(){
+    return msgPersons;
+}
+
+const int conv::getNbMsg(){
+    return nbMessages;
+}
 string conv::toString(){
     stringstream conv;
     for(int i = 0;i<nbMessages;++i){
