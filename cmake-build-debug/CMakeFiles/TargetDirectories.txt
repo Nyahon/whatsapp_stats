@@ -1,3 +1,0 @@
-/home/nyahon/dev/C++/projects/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/nyahon/dev/C++/projects/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/nyahon/dev/C++/projects/cmake-build-debug/CMakeFiles/projects.dir
